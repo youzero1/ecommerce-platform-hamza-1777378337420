@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Star, ShoppingCart, Heart, ChevronLeft, Minus, Plus, Check } from 'lucide-react';
+import { Star, ShoppingCart, Heart, ChevronLeft, Minus, Plus, Check, CreditCard } from 'lucide-react';
 import { Product } from '@/types';
 import { useCart } from '@/lib/cart-context';
 import ProductCard from '@/components/product-card';
@@ -141,6 +141,13 @@ export default function ProductDetailClient({
                 </>
               )}
             </button>
+            <Link
+              href={`/pay/${product.id}`}
+              className="flex items-center justify-center gap-2 rounded-lg border-2 border-primary-600 px-6 py-3 text-sm font-semibold text-primary-600 transition-colors hover:bg-primary-50"
+            >
+              <CreditCard className="h-5 w-5" />
+              Buy Now
+            </Link>
             <button
               className="flex items-center justify-center rounded-lg border border-gray-300 px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50"
               aria-label="Add to wishlist"

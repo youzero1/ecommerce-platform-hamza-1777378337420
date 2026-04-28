@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Star, ShoppingCart } from 'lucide-react';
+import { Star, ShoppingCart, CreditCard } from 'lucide-react';
 import { Product } from '@/types';
 import { useCart } from '@/lib/cart-context';
 
@@ -50,18 +50,20 @@ export default function ProductCard({ product }: { product: Product }) {
             <span className="text-xs text-gray-500">({product.reviews_count})</span>
           </div>
 
-          {/* Price and Add to Cart */}
+          {/* Price and Actions */}
           <div className="mt-3 flex items-center justify-between">
             <span className="text-lg font-bold text-gray-900">
               ${product.price.toFixed(2)}
             </span>
-            <button
-              onClick={handleAddToCart}
-              className="flex items-center gap-1 rounded-lg bg-primary-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-primary-700"
-            >
-              <ShoppingCart className="h-3.5 w-3.5" />
-              Add
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={handleAddToCart}
+                className="flex items-center gap-1 rounded-lg bg-primary-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-primary-700"
+              >
+                <ShoppingCart className="h-3.5 w-3.5" />
+                Add
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -12,3 +12,7 @@ export function getStripe(): Promise<Stripe | null> | null {
   }
   return stripePromise;
 }
+
+export function getStripePromise(): Promise<Stripe | null> | null {
+  return getStripe();
+}
