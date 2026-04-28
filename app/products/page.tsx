@@ -8,16 +8,17 @@ export const metadata = {
   description: 'Browse our complete collection of premium products.',
 };
 
-export default function ProductsPage({
+export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { search?: string; category?: string; sort?: string };
+  searchParams: Promise<{ search?: string; category?: string; sort?: string }>;
 }) {
+  const params = await searchParams;
   let products = [...demoProducts];
 
   // Filter by search
-  if (searchParams.search) {
-    const query = searchParams.search.toLowerCase();
+  if (params.search) {
+    const query = params.search.toLowerCase();
     products = products.filter(
       (p) =>
         p.name.toLowerCase().includes(query) ||
@@ -26,8 +27,8 @@ export default function ProductsPage({
   }
 
   // Filter by category
-  if (searchParams.category) {
-    const catSlug = searchParams.category.toLowerCase();
+  if (params.category) {
+    const catSlug = params.category.toLowerCase();
     const matchingCat = demoCategories.find((c) => c.slug === catSlug);
     if (matchingCat) {
       products = products.filter((p) => p.category === matchingCat.name);
@@ -35,13 +36,13 @@ export default function ProductsPage({
   }
 
   // Sort
-  if (searchParams.sort === 'price-asc') {
+  if (params.sort === 'price-asc') {
     products.sort((a, b) => a.price - b.price);
-  } else if (searchParams.sort === 'price-desc') {
+  } else if (params.sort === 'price-desc') {
     products.sort((a, b) => b.price - a.price);
-  } else if (searchParams.sort === 'rating') {
+  } else if (params.sort === 'rating') {
     products.sort((a, b) => b.rating - a.rating);
-  } else if (searchParams.sort === 'name') {
+  } else if (params.sort === 'name') {
     products.sort((a, b) => a.name.localeCompare(b.name));
   }
 
@@ -52,8 +53,8 @@ export default function ProductsPage({
         <h1 className="text-3xl font-bold text-gray-900">All Products</h1>
         <p className="mt-2 text-gray-500">
           {products.length} product{products.length !== 1 ? 's' : ''} found
-          {searchParams.search ? ` for "${searchParams.search}"` : ''}
-          {searchParams.category ? ` in ${searchParams.category}` : ''}
+          {params.search ? ` for "${params.search}"` : ''}
+          {params.category ? ` in ${params.category}` : ''}
         </p>
       </div>
 
@@ -67,7 +68,7 @@ export default function ProductsPage({
           <a
             href="/products"
             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-              !searchParams.category
+              !params.category
                 ? 'bg-primary-600 text-white'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
@@ -77,9 +78,9 @@ export default function ProductsPage({
           {demoCategories.map((cat) => (
             <a
               key={cat.id}
-              href={`/products?category=${cat.slug}${searchParams.sort ? `&sort=${searchParams.sort}` : ''}`}
+              href={`/products?category=${cat.slug}${params.sort ? `&sort=${params.sort}` : ''}`}
               className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                searchParams.category === cat.slug
+                params.category === cat.slug
                   ? 'bg-primary-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
@@ -91,8 +92,8 @@ export default function ProductsPage({
 
         <div className="ml-auto">
           <ProductSortSelect
-            currentSort={searchParams.sort || ''}
-            currentCategory={searchParams.category || ''}
+            currentSort={params.sort || ''}
+            currentCategory={params.category || ''}
           />
         </div>
       </div>

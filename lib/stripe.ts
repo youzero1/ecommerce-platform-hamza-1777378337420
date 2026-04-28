@@ -1,10 +1,14 @@
-import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe, Stripe } from '@stripe/stripe-js';
 
-const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+let stripePromise: Promise<Stripe | null> | null = null;
 
-export function getStripe() {
+export function getStripe(): Promise<Stripe | null> | null {
+  const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
   if (!publishableKey) {
     return null;
   }
-  return loadStripe(publishableKey);
+  if (!stripePromise) {
+    stripePromise = loadStripe(publishableKey);
+  }
+  return stripePromise;
 }

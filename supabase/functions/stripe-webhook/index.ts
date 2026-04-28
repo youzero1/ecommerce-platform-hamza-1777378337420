@@ -7,14 +7,14 @@ const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
 
 const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET') || '';
 
-Deno.serve(async (req: Request) => {
+Deno.serve(async (req) => {
   if (req.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 });
   }
 
   const signature = req.headers.get('stripe-signature');
   if (!signature) {
-    return new Response('No signature', { status: 400 });
+    return new Response('Missing stripe-signature header', { status: 400 });
   }
 
   const body = await req.text();
@@ -24,28 +24,28 @@ Deno.serve(async (req: Request) => {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     console.error('Webhook signature verification failed:', err);
-    return new Response('Webhook signature verification failed', { status: 400 });
+    return new Response(`Webhook Error: ${(err as Error).message}`, { status: 400 });
   }
 
-  // Handle specific event types
+  // Handle the event
   switch (event.type) {
     case 'payment_intent.succeeded': {
-      const paymentIntent = event.data.object as Stripe.PaymentIntent;
-      console.log('Payment succeeded:', paymentIntent.id, 'Amount:', paymentIntent.amount);
-      // You can update your database here, e.g. mark order as paid
+      const paymentIntent = event.data.object;
+      console.log('Payment succeeded:', paymentIntent.id);
+      // TODO: Update order status in your database
       break;
     }
     case 'payment_intent.payment_failed': {
-      const failedPayment = event.data.object as Stripe.PaymentIntent;
-      console.log('Payment failed:', failedPayment.id);
+      const paymentIntent = event.data.object;
+      console.log('Payment failed:', paymentIntent.id);
       break;
     }
     default:
-      console.log('Unhandled event type:', event.type);
+      console.log(`Unhandled event type: ${event.type}`);
   }
 
   return new Response(JSON.stringify({ received: true }), {
-    status: 200,
     headers: { 'Content-Type': 'application/json' },
+    status: 200,
   });
 });

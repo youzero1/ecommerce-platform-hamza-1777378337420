@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/lib/cart-context';
 import { ShoppingBag, Lock, Check } from 'lucide-react';
@@ -19,7 +19,7 @@ export default function CheckoutPage() {
   const tax = totalPrice * 0.08;
   const finalTotal = totalPrice + shipping + tax;
 
-  const stripePromise = getStripe();
+  const stripePromise = useMemo(() => getStripe(), []);
 
   useEffect(() => {
     if (items.length === 0 || orderPlaced) return;
