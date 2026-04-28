@@ -14,7 +14,7 @@ export default function CartPage() {
           <ShoppingBag className="h-20 w-20 text-gray-300" />
           <h1 className="mt-6 text-2xl font-bold text-gray-900">Your cart is empty</h1>
           <p className="mt-2 text-gray-500">Looks like you have not added any items yet.</p>
-          <Link href="/products" className="mt-8 btn-primary">
+          <Link href="/products" className="mt-8 inline-flex items-center justify-center rounded-lg bg-primary-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-700">
             Start Shopping
           </Link>
         </div>
